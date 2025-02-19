@@ -39,7 +39,7 @@ export default function Navbar() {
             <Button variant="ghost" size="sm">
               EN
             </Button>
-            <Button className="bg-purple-600 hover:bg-purple-700">Subscribe</Button>
+            <Button className="bg-purple-600 hover:bg-purple-700">Login</Button>
           </div>
         </div>
       </div>

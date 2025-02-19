@@ -15,19 +15,21 @@ interface Movie {
   rating: string
   description: string
   trailerUrl: string
+  slider_duration: number
 }
 
 const movies: Movie[] = [
   {
     id: 1,
-    title: "John Wick 4",
-    categories: ["ACTION", "CRIME", "THRILLER"],
-    year: "2023",
+    title: "Nevertheless",
+    categories: ["KDRAMA", "ROMANTIC",],
+    year: "2021",
     duration: "170 mins",
     rating: "TV-MA",
     description:
-      "John Wick uncovers a path to defeating The High Table. But before he can earn his freedom, Wick must face off against a new enemy.",
-    trailerUrl: "/trailers/trailer.mp4",
+      "A young mother and her young daughter, who are in love, meet the love of their family.",
+    trailerUrl: "/trailers/nevertheless.mp4",
+    slider_duration: 170.271927 * 1000
   },
   {
     id: 2,
@@ -38,6 +40,19 @@ const movies: Movie[] = [
     rating: "TV-MA",
     description: "Return to a world of two realities: one, everyday life; the other, what lies behind it.",
     trailerUrl: "/trailers/trailer.mp4",
+    slider_duration: 10000
+  },
+  {
+    id: 1,
+    title: "Nevertheless",
+    categories: ["KDRAMA", "ROMANTIC",],
+    year: "2021",
+    duration: "170 mins",
+    rating: "TV-MA",
+    description:
+      "A young mother and her young daughter, who are in love, meet the love of their family.",
+    trailerUrl: "/trailers/nevertheless.mp4",
+    slider_duration: 170.271927 * 1000
   },
   {
     id: 3,
@@ -48,6 +63,42 @@ const movies: Movie[] = [
     rating: "TV-MA",
     description: "A noble family becomes embroiled in a war for control over the galaxy's most valuable asset.",
     trailerUrl: "/trailers/trailer.mp4",
+    slider_duration: 10000
+  },
+  {
+    id: 1,
+    title: "Nevertheless",
+    categories: ["KDRAMA", "ROMANTIC",],
+    year: "2021",
+    duration: "170 mins",
+    rating: "TV-MA",
+    description:
+      "A young mother and her young daughter, who are in love, meet the love of their family.",
+    trailerUrl: "/trailers/nevertheless.mp4",
+    slider_duration: 170.271927 * 1000
+  },
+  {
+    id: 3,
+    title: "Dune",
+    categories: ["SCI-FI", "ADVENTURE"],
+    year: "2023",
+    duration: "155 mins",
+    rating: "TV-MA",
+    description: "A noble family becomes embroiled in a war for control over the galaxy's most valuable asset.",
+    trailerUrl: "/trailers/trailer.mp4",
+    slider_duration: 10000
+  },
+  {
+    id: 1,
+    title: "Nevertheless",
+    categories: ["KDRAMA", "ROMANTIC",],
+    year: "2021",
+    duration: "170 mins",
+    rating: "TV-MA",
+    description:
+      "A young mother and her young daughter, who are in love, meet the love of their family.",
+    trailerUrl: "/trailers/nevertheless.mp4",
+    slider_duration: 170.271927 * 1000
   },
 ]
 
@@ -57,6 +108,21 @@ export default function HeroSlider() {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const { toast } = useToast()
+
+  useEffect(() => {
+    const arrowEventListener = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        handleNext()
+      } else if (e.key === "ArrowLeft") {
+        handlePrev()
+      }
+    }
+    document.addEventListener("keydown", arrowEventListener)
+
+    return () => {
+      document.removeEventListener("keydown", arrowEventListener)
+    }
+  }, [])
 
   const handleNext = () => {
     if (isTransitioning) return
@@ -77,7 +143,7 @@ export default function HeroSlider() {
       if (!isTransitioning) {
         handleNext()
       }
-    }, 10000)
+    }, movies[currentSlide].slider_duration || 10000)
     return () => clearInterval(timer)
   }, [isTransitioning]) // Removed handleNext from dependencies
 
@@ -101,6 +167,18 @@ export default function HeroSlider() {
       description: `${movies[currentSlide].title} has been added to your list`,
     })
   }
+
+  const handleSlideChange = (index: number) => {
+    if (isTransitioning || index === currentSlide) return;
+  
+    setIsTransitioning(true);
+    setCurrentSlide(index);
+  
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 1000);
+  };
+  
 
   const currentMovie = movies[currentSlide]
 
@@ -161,12 +239,12 @@ export default function HeroSlider() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="absolute top-4 right-4 flex justify-end"
+          className="absolute bottom-4 right-4 flex justify-end z-10"
         >
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20 backdrop-blur-sm"
+            className="text-white hover:bg-white/20 hover:text-white backdrop-blur-sm"
             onClick={toggleMute}
           >
             {isMuted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
@@ -190,7 +268,7 @@ export default function HeroSlider() {
                 transition={{ delay: 0.2 }}
                 className="text-sm text-purple-400"
               >
-                {currentMovie.categories.join(",")}
+                {currentMovie.categories.join(" ")}
               </motion.p>
               <motion.h1
                 initial={{ opacity: 0, x: -20 }}
@@ -229,7 +307,7 @@ export default function HeroSlider() {
                 <Play className="w-4 h-4 mr-2" />
                 Play Now
               </Button>
-              <Button variant="outline" onClick={handleWatchLater}>
+              <Button variant="outline" className="text-purple-600" onClick={handleWatchLater}>
                 <Plus className="w-4 h-4 mr-2" />
                 Watch Later
               </Button>
@@ -240,36 +318,37 @@ export default function HeroSlider() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="flex gap-2 mt-4"
+              className="flex gap-2 mt-4 w-[calc(100%-2rem)]"
             >
               {movies.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    if (!isTransitioning) {
-                      setIsTransitioning(true)
-                      setCurrentSlide(index)
-                      setTimeout(() => setIsTransitioning(false), 1000)
-                    }
-                  }}
-                  className="relative h-1 rounded-full overflow-hidden"
-                  style={{ width: index === currentSlide ? "32px" : "16px" }}
-                >
-                  <div className="absolute inset-0 bg-gray-600" />
-                  {index === currentSlide && (
-                    <motion.div
-                      initial={{ x: "-100%" }}
-                      animate={{ x: "0%" }}
-                      transition={{
-                        duration: 10,
-                        ease: "linear",
-                        repeat: Number.POSITIVE_INFINITY,
-                      }}
-                      className="absolute inset-0 bg-purple-600"
-                    />
-                  )}
-                </button>
-              ))}
+  <button
+    key={index}
+    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+      if (currentSlide === index) {
+        handleSlideChange(index)
+      } else {
+        // videoRef.current?.duration = e.currentTarget.offsetWidth
+      }
+    }}
+    className="relative h-1 rounded-full overflow-hidden"
+    style={{ width: index === currentSlide ? "100%" : `calc(100% / ${movies.length})` }}
+  >
+    <div className="absolute inset-0 bg-gray-600" />
+    {index === currentSlide && (
+      <motion.div
+        initial={{ x: "-100%" }}
+        animate={{ x: "0%" }}
+        transition={{
+          duration: movies[currentSlide]?.slider_duration / 1000 || 10,
+          ease: "linear",
+          repeat: 0,
+        }}
+        className="absolute inset-0 bg-purple-600"
+      />
+    )}
+  </button>
+))}
+
             </motion.div>
           </motion.div>
         </AnimatePresence>
