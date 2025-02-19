@@ -1,7 +1,7 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDatabase } from "./mongoose";
-import User from "@/database/user.model";
+import User from "@/database/admin.model";
 import { compare, hash } from "bcrypt";
 
 interface SessionUser {

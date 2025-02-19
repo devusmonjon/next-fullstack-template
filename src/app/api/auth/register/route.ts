@@ -1,4 +1,4 @@
-import User from "@/database/user.model";
+import User from "@/database/admin.model";
 import { connectToDatabase } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
