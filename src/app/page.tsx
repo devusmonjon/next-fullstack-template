@@ -4,7 +4,6 @@ import TrendingMovies from "@/components/trending-movies"
 import NewReleases from "@/components/new-releases"
 import TVSeries from "@/components/tv-series"
 import Footer from "@/components/footer"
-import { Toaster } from "@/components/ui/toaster"
 
 export default function Home() {
   return (
@@ -19,7 +18,6 @@ export default function Home() {
         </div>
       </main>
       <Footer />
-      <Toaster />
     </div>
   )
 }

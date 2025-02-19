@@ -69,9 +69,9 @@ export default function TVSeries() {
 
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between md:flex-row flex-col overflow-x-auto gap-4 md:gap-0">
         <h2 className="text-2xl font-semibold">Recommended TV Shows</h2>
-        <div className="flex gap-4">
+        <div className="flex gap-4 md:w-auto w-full justify-between">
           <Button variant="link" className="text-purple-400">
             Today
           </Button>
@@ -126,7 +126,7 @@ export default function TVSeries() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-white text-white hover:bg-white/20"
+                    className="border-white text-black hover:bg-white/20"
                     onClick={() => handleWatchLater(show)}
                   >
                     <Plus className="w-4 h-4 mr-2" />
